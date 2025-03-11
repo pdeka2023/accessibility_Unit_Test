@@ -1,4 +1,4 @@
-# Java-a11y
+# Accessibility
 ## Accessibility Automation for Web Apps with Java and Selenium Webdriver.
 
 >Note If you are using version 2.1.4 and below, refer [readme](/ReadMe_Pre.md)
@@ -32,13 +32,10 @@ For maven based project add the below dependency
   <version>3.0.4</version>
 </dependency>
 ```
-For gradle based project add the below dependency
-```
-compile 'io.github.sridharbandi:java-a11y:3.0.4'
-```
-For non gradle/maven project download the jar from below mentioned link and add it to CLASSPATH for your project
+For Maven based project add the below dependency
 
-[https://github.com/sridharbandi/Java-a11y/releases](https://github.com/sridharbandi/Java-a11y/releases)
+```
+For non maven project download the jar from below mentioned link and add it to CLASSPATH for your project
 
 ### Getting Started
 #### Using HTML CodeSniffer
@@ -62,18 +59,19 @@ htmlCsRunner.generateHtmlReport();
 Below is junit example with reporting.
 
 ```java
-import freemarker.template.TemplateException;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.sridharbandi.HtmlCsRunner;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import axe.my.support.HtmlCsRunner;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 
 /**
@@ -87,7 +85,9 @@ public class Example {
     @BeforeEach
     public void beforeTest() {
         ChromeDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        driver = new ChromeDriver(options);
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
         driver.manage().window().fullscreen();
         htmlCsRunner = new HtmlCsRunner(driver);
@@ -106,15 +106,23 @@ public class Example {
     }
 
     @Test
-    public void googleTest() {
-        driver.get("https://www.google.com/");
+    public void cmcmsTest() {
+    	driver.get("https://www.medicaid.gov/");
+    }
+    
+    @Test
+    public void cmcmsChipTest() {
+    	driver.get("https://www.medicaid.gov/chip/state-program-information/chip-spa/index.html/");
+    }
+    
+    //
+    @Test
+    public void insureKids() {
+    	driver.get("https://www.insurekidsnow.gov/");
     }
 
-    @Test
-    public void stockTest() {
-        driver.get("https://www.istockphoto.com/");
-    }
 }
+
 ```
 
 By default, it will check against `WCAG2AA` standards. However, you can configure it to standard you want to test with
@@ -155,18 +163,19 @@ axeRunner.generateHtmlReport();
 Below is junit example with reporting.
 
 ```java
-import freemarker.template.TemplateException;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.sridharbandi.AxeRunner;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import axe.my.support.HtmlCsRunner;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 
 /**
@@ -175,40 +184,49 @@ import java.time.Duration;
 public class Example {
 
     private WebDriver driver;
-    private static AxeRunner axeRunner;
+    private static HtmlCsRunner htmlCsRunner;
 
     @BeforeEach
     public void beforeTest() {
         ChromeDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--remote-allow-origins=*");
+        driver = new ChromeDriver(options);
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
         driver.manage().window().fullscreen();
-        axeRunner = new AxeRunner(driver);
+        htmlCsRunner = new HtmlCsRunner(driver);
 
     }
 
     @AfterEach
     public void tearDown() throws IOException {
-        axeRunner.execute();
+        htmlCsRunner.execute();
         driver.quit();
     }
 
     @AfterAll
     public static void generateReport() throws IOException {
-        axeRunner.generateHtmlReport();
+        htmlCsRunner.generateHtmlReport();
     }
 
     @Test
-    public void googleTest() {
-        driver.get("https://www.google.com/");
+    public void cmcmsTest() {
+    	driver.get("https://www.medicaid.gov/");
     }
-
+    
     @Test
-    public void stockTest() {
-        driver.get("https://www.istockphoto.com/");
+    public void cmcmsChipTest() {
+    	driver.get("https://www.medicaid.gov/chip/state-program-information/chip-spa/index.html/");
+    }
+    
+    //
+    @Test
+    public void insureKids() {
+    	driver.get("https://www.insurekidsnow.gov/");
     }
 
 }
+
 ```
 
 By default, it will check against `WCAG2AA` and `section508` tags. However, you can configure it to tag you want to test with
