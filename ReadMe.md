@@ -233,8 +233,10 @@ Below are the report screenshots
 
 Consolidated Report
 
-![Index](/readme/axe_index.png)
+![image](https://github.com/user-attachments/assets/1aef4cdb-0ad1-4126-8332-da4cd7fb78d7)
+
 
 Page Report
 
-![Page](/readme/axe_page.png)
+![image](https://github.com/user-attachments/assets/c5c7e103-5295-42d4-b506-d39ef71adac9)
+
